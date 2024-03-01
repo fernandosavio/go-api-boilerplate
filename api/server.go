@@ -19,7 +19,7 @@ func gracefulServerShutdown(server *http.Server) {
 
 	signal := <-signalRx
 
-	log.Info().Msgf("Signal received: %v\n", signal)
+	log.Info().Msgf("Signal received: %v", signal)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 

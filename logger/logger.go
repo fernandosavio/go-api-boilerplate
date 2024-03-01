@@ -4,17 +4,40 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
+	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/pkgerrors"
 )
 
-var LoggerMiddleware func(next http.Handler) http.Handler = hlog.AccessHandler(accessMiddleware)
+func init() {
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
+	zerolog.TimeFieldFormat = time.RFC3339Nano
+}
+
+const (
+	// Field name correlation ID will appear in logs
+	CorrelationIDFieldName string = "correlation_id"
+	// Field name correlation ID will appear in response headers (empty string to omit)
+	CorrelationIDHeaderName string = "Correlation-ID"
+)
+
+// Inject logger in each request
+var InjectLoggerMiddleware func(next http.Handler) http.Handler = hlog.NewHandler(log.Logger)
+
+// Create a Correlation ID for each request and add it to the request/log context
+var RequestIDMiddleware func(next http.Handler) http.Handler = hlog.RequestIDHandler(CorrelationIDFieldName, CorrelationIDHeaderName)
+
+// Log request information after each request
+var LogRequestMiddleware func(next http.Handler) http.Handler = hlog.AccessHandler(accessMiddleware)
 
 func accessMiddleware(r *http.Request, status, size int, duration time.Duration) {
 	hlog.FromRequest(r).Info().
 		Str("method", r.Method).
 		Stringer("url", r.URL).
 		Int("status_code", status).
-		Int("response_size_bytes", size).
+		Int("response_size", size).
 		Dur("elapsed_ms", duration).
-		Msg("incoming request")
+		Msg("request access log")
 }

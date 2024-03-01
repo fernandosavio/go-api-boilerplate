@@ -2,24 +2,24 @@ package main
 
 import (
 	"context"
-	"time"
+	"os"
 
 	"example.com/calendar-api/api"
-	"github.com/rs/zerolog"
+	_ "example.com/calendar-api/logger"
 	"github.com/rs/zerolog/log"
-	"github.com/rs/zerolog/pkgerrors"
 )
 
 const PORT uint16 = 3333
 
 func main() {
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
-	zerolog.TimeFieldFormat = time.RFC3339Nano
-
 	appContext := context.Background()
 
 	log.Info().Msg("Starting server")
-	api.RunServer(appContext, api.Router, PORT)
+	err := api.RunServer(appContext, api.Router, PORT)
+
+	if err != nil {
+		log.Fatal().Err(err).Msg("")
+		os.Exit(2)
+	}
 	log.Info().Msg("Stopping server")
 }
