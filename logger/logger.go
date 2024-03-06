@@ -1,9 +1,11 @@
 package logger
 
 import (
+	"context"
 	"net/http"
 	"time"
 
+	"example.com/calendar-api/settings"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
 	"github.com/rs/zerolog/log"
@@ -11,7 +13,7 @@ import (
 )
 
 func init() {
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	zerolog.SetGlobalLevel(settings.LogLevel)
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 	zerolog.TimeFieldFormat = time.RFC3339Nano
 }
@@ -40,4 +42,16 @@ func accessMiddleware(r *http.Request, status, size int, duration time.Duration)
 		Int("response_size", size).
 		Dur("elapsed_ms", duration).
 		Msg("request access log")
+}
+
+func CorrelationIDFromRequest(r *http.Request) (correlationID string, ok bool) {
+	id, ok := hlog.IDFromRequest(r)
+	correlationID = id.String()
+	return
+}
+
+func CorrelationIDFromContext(ctx context.Context) (correlationID string, ok bool) {
+	id, ok := hlog.IDFromCtx(ctx)
+	correlationID = id.String()
+	return
 }

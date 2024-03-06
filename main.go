@@ -6,16 +6,15 @@ import (
 
 	"example.com/calendar-api/api"
 	_ "example.com/calendar-api/logger"
+	"example.com/calendar-api/settings"
 	"github.com/rs/zerolog/log"
 )
-
-const PORT uint16 = 3333
 
 func main() {
 	appContext := context.Background()
 
 	log.Info().Msg("Starting server")
-	err := api.RunServer(appContext, api.Router, PORT)
+	err := api.RunServer(appContext, api.Router, settings.Port)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("")
