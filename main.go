@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"example.com/calendar-api/api"
-	_ "example.com/calendar-api/logger"
+	_ "example.com/calendar-api/logger" // configures global settings of zerolog
 	"example.com/calendar-api/settings"
 	"github.com/rs/zerolog/log"
 )
