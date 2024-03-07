@@ -4,27 +4,30 @@ import (
 	"math"
 	"os"
 	"strconv"
-	"strings"
+
+	"github.com/rs/zerolog"
 )
 
-var truthyValues = map[string]bool{
-	"yes":  true,
-	"true": true,
-	"1":    true,
-	"on":   true,
-}
-
+// Parse an environment variable as a boolean.
+//
+// Returns defaultValue if not found on environment or if value found is invalid.
+//
+// Valid truthy values are: "1", "t", "T", "true", "TRUE", "True"
+//
+// Valid falsy values are: "0", "f", "F", "false", "FALSE", "False"
 func boolFromEnv(key string, defaultValue bool) bool {
-	value, found := os.LookupEnv(key)
+	result, error := strconv.ParseBool(os.Getenv(key))
 
-	if !found {
+	if error != nil {
 		return defaultValue
 	}
 
-	_, found = truthyValues[strings.ToLower(strings.TrimSpace(value))]
-	return found
+	return result
 }
 
+// Parse an environment variable as a uint64.
+//
+// Returns defaultValue if not found on environment or if value found could not be converted.
 func uint64FromEnv(key string, defaultValue uint64) uint64 {
 	value, found := os.LookupEnv(key)
 
@@ -32,7 +35,7 @@ func uint64FromEnv(key string, defaultValue uint64) uint64 {
 		return defaultValue
 	}
 
-	number, error := strconv.ParseUint(value, 10, 32)
+	number, error := strconv.ParseUint(value, 10, 64)
 
 	if error != nil {
 		return defaultValue
@@ -41,6 +44,9 @@ func uint64FromEnv(key string, defaultValue uint64) uint64 {
 	return number
 }
 
+// Parse an environment variable as a uint16.
+//
+// Returns defaultValue if not found on environment or if value found could not be converted.
 func uint16FromEnv(key string, defaultValue uint16) uint16 {
 	default64 := uint64(defaultValue)
 	value := uint64FromEnv(key, default64)
@@ -52,6 +58,9 @@ func uint16FromEnv(key string, defaultValue uint16) uint16 {
 	return uint16(value)
 }
 
+// Parse an environment variable as a string.
+//
+// Returns defaultValue if not found on environment.
 func stringFromEnv(key string, defaultValue string) string {
 	value, found := os.LookupEnv(key)
 
@@ -60,4 +69,23 @@ func stringFromEnv(key string, defaultValue string) string {
 	}
 
 	return value
+}
+
+// Parse an environment variable as a log level.
+//
+// Returns defaultValue if not found on environment or if value found is invalid.
+func logLevelFromEnv(key string, defaultValue zerolog.Level) zerolog.Level {
+	value := os.Getenv(key)
+
+	if value == "" {
+		return defaultValue
+	}
+
+	parsedLevel, error := zerolog.ParseLevel(value)
+
+	if error != nil {
+		return defaultValue
+	}
+
+	return parsedLevel
 }
