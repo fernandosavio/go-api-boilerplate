@@ -8,7 +8,7 @@ import (
 
 var timeZeroValue = time.Time{}
 var formatDateWithTZ = "2006-01-02Z07:00"
-var tzSuffix = time.Now().In(settings.Timezone).Format("Z07:00")
+var tzSuffix = time.Date(2000, 1, 1, 0, 0, 0, 0, settings.Timezone).Format("Z07:00")
 
 func ParseDate(value string) (time.Time, error) {
 	if value == "" {
