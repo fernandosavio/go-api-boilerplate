@@ -28,16 +28,24 @@ func gracefulServerShutdown(server *http.Server) {
 	}
 }
 
-func RunServer(ctx context.Context, router http.Handler, port uint16) error {
+func Server(port uint16) *http.Server {
 	server := http.Server{
 		Addr:              ":" + strconv.Itoa(int(port)),
-		Handler:           router,
+		Handler:           nil,
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       30 * time.Second,
 		WriteTimeout:      30 * time.Second,
 	}
 
-	go gracefulServerShutdown(&server)
+	return &server
+}
+
+func RunServer(ctx context.Context, port uint16) error {
+	server := Server(port)
+
+	RegisterHandlers(server)
+
+	go gracefulServerShutdown(server)
 
 	log.Info().Msgf("Listening on port %d", port)
 	err := server.ListenAndServe()

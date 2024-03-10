@@ -17,9 +17,11 @@ Funcionalidades:
 - [x] Endpoint de healtcheck
 - [x] Compressão de response (deflate e gzip)
 - [x] Timeouts do servidor pré-configurados
-- [ ] Funções helper para criar respostas HTTP em JSON
+- [x] Implementar handlers de 404 e 405
+- [x] Funções helper para criar respostas HTTP em JSON
 - [ ] Carregamento de arquivos `.env`
 - [ ] "Pretty logs" quando em desenvolvimento local
+- [ ] Documentação OpenAPI automática (ou o mais automático possível)
 - [ ] OpenTelemetry
 
 
