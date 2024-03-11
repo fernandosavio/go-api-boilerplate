@@ -3,7 +3,7 @@ package validations
 import (
 	"time"
 
-	"example.com/calendar-api/internal/settings"
+	"example.com/bizday-api/internal/settings"
 )
 
 var timeZeroValue = time.Time{}

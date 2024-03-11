@@ -1,8 +1,8 @@
 package settings
 
 import (
-	"example.com/calendar-api/internal/holidayrepository"
-	"example.com/calendar-api/pkg/bizday"
+	"example.com/bizday-api/internal/holidayrepository"
+	"example.com/bizday-api/pkg/bizday"
 )
 
 var holidayRepository = holidayrepository.NoHolidayRepo{}

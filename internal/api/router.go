@@ -3,9 +3,9 @@ package api
 import (
 	"net/http"
 
-	"example.com/calendar-api/internal/api/businessday"
-	"example.com/calendar-api/internal/api/response"
-	"example.com/calendar-api/internal/logger"
+	"example.com/bizday-api/internal/api/businessday"
+	"example.com/bizday-api/internal/api/response"
+	"example.com/bizday-api/internal/logger"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"example.com/calendar-api/internal/settings"
+	"example.com/bizday-api/internal/settings"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
 	"github.com/rs/zerolog/log"

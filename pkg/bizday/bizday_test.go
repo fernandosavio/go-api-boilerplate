@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"example.com/calendar-api/internal/bizday"
+	"example.com/bizday-api/pkg/bizday"
 )
 
 func TestDateStringValidation(t *testing.T) {

@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"example.com/calendar-api/internal/api/response"
-	"example.com/calendar-api/internal/logger"
-	"example.com/calendar-api/internal/settings"
-	"example.com/calendar-api/internal/validations"
+	"example.com/bizday-api/internal/api/response"
+	"example.com/bizday-api/internal/logger"
+	"example.com/bizday-api/internal/settings"
+	"example.com/bizday-api/internal/validations"
 )
 
 type NextBizdayResponse struct {

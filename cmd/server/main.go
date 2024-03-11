@@ -4,9 +4,9 @@ import (
 	"context"
 	"os"
 
-	"example.com/calendar-api/internal/api"
-	_ "example.com/calendar-api/internal/logger" // configures global settings of zerolog
-	"example.com/calendar-api/internal/settings"
+	"example.com/bizday-api/internal/api"
+	_ "example.com/bizday-api/internal/logger" // configures global settings of zerolog
+	"example.com/bizday-api/internal/settings"
 	"github.com/rs/zerolog/log"
 )
 

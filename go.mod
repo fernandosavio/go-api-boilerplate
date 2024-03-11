@@ -1,4 +1,4 @@
-module example.com/calendar-api
+module example.com/bizday-api
 
 go 1.21.5
 
