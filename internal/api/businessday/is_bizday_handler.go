@@ -1,14 +1,13 @@
 package businessday
 
 import (
-	"errors"
 	"net/http"
 	"time"
 
 	"example.com/bizday-api/internal/api/response"
 	"example.com/bizday-api/internal/logger"
 	"example.com/bizday-api/internal/settings"
-	"example.com/bizday-api/internal/validations"
+	"example.com/bizday-api/internal/validation"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -17,17 +16,27 @@ type IsBizdayResponse struct {
 	IsBizDay bool   `json:"is_business_day"`
 }
 
-func validateIsBizdayRequest(r *http.Request) (time.Time, error) {
-	input := chi.URLParam(r, "date")
+func validateIsBizdayRequest(r *http.Request) (time.Time, *response.ValidationErrorResponse) {
+	fieldName := "date"
+	input := chi.URLParam(r, fieldName)
+	errs := response.ValidationError(logger.CorrelationIDFromRequest(r), nil)
 
 	if input == "" {
-		return time.Time{}, errors.New("invalid date")
+		fieldError := validation.RequiredError.FieldError(response.LocPath, response.ErrorContext{})
+		errs.Add(fieldName, fieldError)
+		// RequiredError doesn't need to perform other validations so we return
+		return time.Time{}, errs
 	}
 
-	parsedDate, err := validations.ParseDate(input)
+	parsedDate, err := validation.ParseDate(input)
 
 	if err != nil {
-		return time.Time{}, errors.New("invalid date")
+		fieldError := validation.InvalidDateError.FieldError(response.LocPath, response.ErrorContext{})
+		errs.Add(fieldName, fieldError)
+	}
+
+	if errs.HasErrors() {
+		return time.Time{}, errs
 	}
 
 	return parsedDate, nil
@@ -37,13 +46,7 @@ func IsBizdayHandler(w http.ResponseWriter, r *http.Request) {
 	date, err := validateIsBizdayRequest(r)
 
 	if err != nil {
-		correlationID, _ := logger.CorrelationIDFromRequest(r)
-		response.JSON(w, r, http.StatusUnprocessableEntity, map[string]interface{}{
-			"request_id": correlationID,
-			"errors": map[string]string{
-				"date": err.Error(),
-			},
-		})
+		response.JSON(w, r, http.StatusUnprocessableEntity, err)
 		return
 	}
 

@@ -19,6 +19,7 @@ Funcionalidades:
 - [x] Timeouts do servidor pré-configurados
 - [x] Implementar handlers de 404 e 405
 - [x] Funções helper para criar respostas HTTP em JSON
+- [x] Padronização de estrutura JSON de erros e erros de validação
 - [ ] Carregamento de arquivos `.env`
 - [ ] "Pretty logs" quando em desenvolvimento local
 - [ ] Documentação OpenAPI automática (ou o mais automático possível)

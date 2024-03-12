@@ -25,7 +25,7 @@ func Router() *chi.Mux {
 
 	// Default 404 handler
 	router.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		correlationId, _ := logger.CorrelationIDFromRequest(r)
+		correlationId := logger.CorrelationIDFromRequest(r)
 		response.JSON(w, r, http.StatusNotFound, response.Error404(correlationId))
 	})
 

@@ -23,6 +23,8 @@ const (
 	CorrelationIDFieldName string = "correlation_id"
 	// Field name correlation ID will appear in response headers (empty string to omit)
 	CorrelationIDHeaderName string = "Correlation-ID"
+	// Default correlation ID when not set
+	DefaultCorrelationID string = "NOT_SET"
 )
 
 // Inject logger in each request
@@ -44,14 +46,16 @@ func accessMiddleware(r *http.Request, status, size int, duration time.Duration)
 		Msg("request access log")
 }
 
-func CorrelationIDFromRequest(r *http.Request) (correlationID string, ok bool) {
-	id, ok := hlog.IDFromRequest(r)
-	correlationID = id.String()
-	return
+func CorrelationIDFromRequest(r *http.Request) string {
+	if id, ok := hlog.IDFromRequest(r); ok {
+		return id.String()
+	}
+	return DefaultCorrelationID
 }
 
-func CorrelationIDFromContext(ctx context.Context) (correlationID string, ok bool) {
-	id, ok := hlog.IDFromCtx(ctx)
-	correlationID = id.String()
-	return
+func CorrelationIDFromContext(ctx context.Context) string {
+	if id, ok := hlog.IDFromCtx(ctx); ok {
+		return id.String()
+	}
+	return DefaultCorrelationID
 }
